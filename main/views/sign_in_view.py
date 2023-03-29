@@ -76,7 +76,7 @@ class SignInView(APIView):
                 return MyResponse({'result': f'发送邮箱失败,{send_status["errmsg"]}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             return MyResponse({
-                'result': "邮件发送成功~",
+                'result': "邮件发送成功~\n验证码5分钟有效。",
             }, status=status.HTTP_200_OK)
         except Exception as e:
             traceback.print_exc()

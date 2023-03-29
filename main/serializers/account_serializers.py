@@ -2,10 +2,13 @@ from django.core.validators import RegexValidator, EmailValidator
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from main.models.account_models import Account, Follow, Like, Post, Comment
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
 from django.forms import model_to_dict
 
 from django.contrib.auth import get_user_model
+
+from main.models.poetry_models import Shi, Ci
+from main.serializers.search_serializers import ShiSerializer, CiSerializer
 
 User = get_user_model()
 
@@ -37,7 +40,6 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('__all__')
-        extra_fields = ['is_followed']
         # exclude = ['follows']
         read_only_fields = ('id', 'user',  'email', 'follow_count', 'fan_count', 'post_count', 'fans', 'follows')
 
@@ -198,8 +200,54 @@ class CommentSerializer(serializers.ModelSerializer):
 
         return attrs
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+class ShiCollectionSerializer(serializers.ModelSerializer):
+    # author = AccountSimpleSerializer(read_only=True)
+    shi = ShiSerializer(read_only=True)
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
+    shi_id = serializers.IntegerField(write_only=True, required=True)
+
+    class Meta:
+        model = ShiCollection
+        fields = ('__all__')
+        extra_fields = ['shi_id']
+        read_only_fields = ('id', 'author', 'shi', 'create_date')
+
+    def validate_shi_id(self, value):
+        user_id = self.context['request'].user.id
+        if not Shi.objects.filter(id=value).exists():
+            raise serializers.ValidationError("该诗不存在！")
+
+        if ShiCollection.objects.filter(author_id=user_id, shi_id=value).exists():
+            raise serializers.ValidationError("您已收藏过该诗！")
+
+        return value
+
+class CiCollectionSerializer(serializers.ModelSerializer):
+    # author = AccountSimpleSerializer(read_only=True)
+    ci = CiSerializer(read_only=True)
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+    ci_id = serializers.IntegerField(write_only=True, required=True)
+
+    class Meta:
+        model = CiCollection
+        fields = ('__all__')
+        extra_fields = ['ci_id']
+        read_only_fields = ('id', 'author', 'ci', 'create_date')
+
+    def validate_ci_id(self, value):
+        user_id = self.context['request'].user.id
+        if not Ci.objects.filter(id=value).exists():
+            raise serializers.ValidationError("该诗不存在！")
+
+        if CiCollection.objects.filter(author_id=user_id, ci_id=value).exists():
+            raise serializers.ValidationError("您已收藏过该诗！")
+
+        return value
+
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

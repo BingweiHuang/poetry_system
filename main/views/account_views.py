@@ -6,9 +6,10 @@ from rest_framework import status, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.filters.account_filters import AccountFilter, PostFilter, FollowFilter, LikeFilter, CommentFilter
+from main.filters.account_filters import AccountFilter, PostFilter, FollowFilter, LikeFilter, CommentFilter, \
+    ShiCollectionFilter, CiCollectionFilter
 # from main.filters import PostFilter
-from main.models.account_models import Account, Follow, Like, Post, Comment
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
 from django.core.cache import cache
 
 from django.contrib.auth import get_user_model
@@ -20,7 +21,8 @@ User = get_user_model()
 from main.pagination import MyPageNumberPagination
 from main.permissions import IsAuthorOrReadOnly, IsFanOrReadOnly, IsUserOrReadOnly, DelCommentOrReadOnly
 from main.serializers.account_serializers import AccountSimpleSerializer, AccountSerializer, \
-    FollowSerializer, PostSerializer, LikeSerializer, CommentSerializer, MyTokenObtainPairSerializer
+    FollowSerializer, PostSerializer, LikeSerializer, CommentSerializer, MyTokenObtainPairSerializer, \
+    ShiCollectionSerializer, CiCollectionSerializer
 
 from main.throttles import UserReadRateThrottle, AnonReadRateThrottle
 
@@ -329,6 +331,73 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
+class ShiCollectionViewSet(viewsets.ModelViewSet):
+    queryset = ShiCollection.objects.all()
+    serializer_class = ShiCollectionSerializer
+    permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
+
+    filterset_class = ShiCollectionFilter
+
+    ordering_fields = ['create_date']  # 排序选项
+    ordering = ['-create_date']  # 默认排序
+
+    # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def perform_create(self, serializer):
+        serializer.save(author_id=self.request.user.id)
+
+class CiCollectionViewSet(viewsets.ModelViewSet):
+    queryset = CiCollection.objects.all()
+    serializer_class = CiCollectionSerializer
+    permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
+
+    filterset_class = CiCollectionFilter
+
+    ordering_fields = ['create_date']  # 排序选项
+    ordering = ['-create_date']  # 默认排序
+
+    # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def perform_create(self, serializer):
+        serializer.save(author_id=self.request.user.id)
 
 
 from qiniu import Auth

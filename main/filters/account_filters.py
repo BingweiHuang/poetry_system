@@ -1,6 +1,7 @@
 from rest_framework import generics
 from django_filters import rest_framework as filters
-from main.models.account_models import Account, Follow, Like, Post, Comment
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
+
 
 class AccountFilter(filters.FilterSet):
     email = filters.CharFilter(field_name="email", lookup_expr='exact')
@@ -56,6 +57,7 @@ class LikeFilter(filters.FilterSet):
     class Meta:
         model = Like
         fields = []
+
 class CommentFilter(filters.FilterSet):
     post = filters.NumberFilter(field_name="post__id", lookup_expr='exact')
     author = filters.NumberFilter(field_name="author__id", lookup_expr='exact')
@@ -65,4 +67,24 @@ class CommentFilter(filters.FilterSet):
 
     class Meta:
         model = Comment
+        fields = []
+
+class ShiCollectionFilter(filters.FilterSet):
+    shi = filters.NumberFilter(field_name="shi__id", lookup_expr='exact')
+    author = filters.NumberFilter(field_name="author__id", lookup_expr='exact')
+    create_date = filters.IsoDateTimeFromToRangeFilter(field_name="create_date")
+    # 提交 create_date_after 和 create_date_before
+
+    class Meta:
+        model = ShiCollection
+        fields = []
+
+class CiCollectionFilter(filters.FilterSet):
+    ci = filters.NumberFilter(field_name="ci__id", lookup_expr='exact')
+    author = filters.NumberFilter(field_name="author__id", lookup_expr='exact')
+    create_date = filters.IsoDateTimeFromToRangeFilter(field_name="create_date")
+    # 提交 create_date_after 和 create_date_before
+
+    class Meta:
+        model = CiCollection
         fields = []

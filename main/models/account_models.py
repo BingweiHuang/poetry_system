@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
 
+from main.models.poetry_models import Shi, Ci
 
 '''
  用户表
@@ -92,3 +93,25 @@ class Comment(models.Model):
         ordering = ['-create_date']
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
+
+class ShiCollection(models.Model):
+    shi = models.ForeignKey(Shi, related_name='shi_collection_shis', on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, related_name='shi_collection_authors', on_delete=models.CASCADE, blank=True, null=True)
+    create_date = models.DateTimeField(default=timezone.now, blank=False)
+
+    class Meta:
+        db_table = 'shi_collection'
+        ordering = ['-create_date']
+        verbose_name = "ShiCollection"
+        verbose_name_plural = "ShiCollections"
+
+class CiCollection(models.Model):
+    ci = models.ForeignKey(Ci, related_name='ci_collection_cis', on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, related_name='ci_collection_authors', on_delete=models.CASCADE, blank=True, null=True)
+    create_date = models.DateTimeField(default=timezone.now, blank=False)
+
+    class Meta:
+        db_table = 'ci_collection'
+        ordering = ['-create_date']
+        verbose_name = "CiCollection"
+        verbose_name_plural = "CiCollections"

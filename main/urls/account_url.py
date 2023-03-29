@@ -73,6 +73,26 @@ comment_detail = account_views.CommentViewSet.as_view({
     'delete': 'destroy',  # 处理delete请求，删除单个记录
 })
 
+shi_collection_list = account_views.ShiCollectionViewSet.as_view({
+    'get': 'list',  # 处理get请求，获取多个记录
+    'post': 'create'  # 处理post请求，添加单个记录
+})
+shi_collection_detail = account_views.ShiCollectionViewSet.as_view({
+    'get': 'retrieve',  # 处理get请求，获取单个记录
+    # 'put': 'update',  # 处理put请求，修改单个记录
+    'delete': 'destroy',  # 处理delete请求，删除单个记录
+})
+
+ci_collection_list = account_views.CiCollectionViewSet.as_view({
+    'get': 'list',  # 处理get请求，获取多个记录
+    'post': 'create'  # 处理post请求，添加单个记录
+})
+ci_collection_detail = account_views.CiCollectionViewSet.as_view({
+    'get': 'retrieve',  # 处理get请求，获取单个记录
+    # 'put': 'update',  # 处理put请求，修改单个记录
+    'delete': 'destroy',  # 处理delete请求，删除单个记录
+})
+
 urlpatterns = [
 
     # re_path(r'^posts/$', account_views.PostList.as_view()),
@@ -99,6 +119,12 @@ urlpatterns = [
 
     re_path(r'^comments/$', comment_list),
     re_path(r'^comments/(?P<pk>[0-9]+)$', comment_detail),
+
+    re_path(r'^shi_collections/$', shi_collection_list),
+    re_path(r'^shi_collections/(?P<pk>[0-9]+)$', shi_collection_detail),
+
+    re_path(r'^ci_collections/$', ci_collection_list),
+    re_path(r'^ci_collections/(?P<pk>[0-9]+)$', ci_collection_detail),
 
 ]
 

@@ -13,6 +13,8 @@ from .models.account_models import Follow
 from .models.account_models import Post
 from .models.account_models import Like
 from .models.account_models import Comment
+from .models.account_models import ShiCollection
+from .models.account_models import CiCollection
 
 
 admin.site.register(Shi)
@@ -26,3 +28,5 @@ admin.site.register(Follow)
 admin.site.register(Post)
 admin.site.register(Like)
 admin.site.register(Comment)
+admin.site.register(ShiCollection)
+admin.site.register(CiCollection)
