@@ -115,3 +115,18 @@ class CiCollection(models.Model):
         ordering = ['-create_date']
         verbose_name = "CiCollection"
         verbose_name_plural = "CiCollections"
+
+class Work(models.Model):
+    author = models.ForeignKey(Account, related_name='work_author', on_delete=models.CASCADE, blank=True, null=True)
+    title = models.CharField(max_length=10, blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+    display = models.BooleanField(default=True) # 是否公开
+    topping = models.BooleanField(default=False) # 置顶
+    create_date = models.DateTimeField(auto_now_add=True, blank=False)
+    update_date = models.DateTimeField(auto_now=True, blank=False)
+
+    class Meta:
+        db_table = 'work'
+        ordering = ['-topping', '-create_date']
+        verbose_name = "Work"
+        verbose_name_plural = "Works"

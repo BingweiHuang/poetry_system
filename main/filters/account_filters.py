@@ -1,6 +1,6 @@
 from rest_framework import generics
 from django_filters import rest_framework as filters
-from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection, Work
 
 
 class AccountFilter(filters.FilterSet):
@@ -87,4 +87,18 @@ class CiCollectionFilter(filters.FilterSet):
 
     class Meta:
         model = CiCollection
+        fields = []
+
+class WorkFilter(filters.FilterSet):
+    author = filters.NumberFilter(field_name="author__id", lookup_expr='exact')
+    title = filters.NumberFilter(field_name="title", lookup_expr='icontains')
+    content = filters.NumberFilter(field_name="content", lookup_expr='icontains')
+    display = filters.BooleanFilter(field_name="display", lookup_expr='exact')
+    topping = filters.BooleanFilter(field_name="topping", lookup_expr='exact')
+    update_date = filters.IsoDateTimeFromToRangeFilter(field_name="update_date")
+    create_date = filters.IsoDateTimeFromToRangeFilter(field_name="create_date")
+    # 提交 create_date_after 和 create_date_before
+
+    class Meta:
+        model = Work
         fields = []

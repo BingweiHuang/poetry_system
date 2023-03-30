@@ -2,7 +2,7 @@ from django.test import TestCase
 
 # from main.utils.tools import md5_encryption
 # Create your tests here.
-from metric_poetry_generation_system_backend.settings import BASE_DIR
+from poetry_system.settings import BASE_DIR
 
 print(BASE_DIR)
 

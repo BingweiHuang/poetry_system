@@ -1,5 +1,6 @@
 import traceback
 
+from django.forms import model_to_dict
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, filters
 
@@ -7,9 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from main.filters.account_filters import AccountFilter, PostFilter, FollowFilter, LikeFilter, CommentFilter, \
-    ShiCollectionFilter, CiCollectionFilter
+    ShiCollectionFilter, CiCollectionFilter, WorkFilter
 # from main.filters import PostFilter
-from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection, Work
 from django.core.cache import cache
 
 from django.contrib.auth import get_user_model
@@ -22,7 +23,7 @@ from main.pagination import MyPageNumberPagination
 from main.permissions import IsAuthorOrReadOnly, IsFanOrReadOnly, IsUserOrReadOnly, DelCommentOrReadOnly
 from main.serializers.account_serializers import AccountSimpleSerializer, AccountSerializer, \
     FollowSerializer, PostSerializer, LikeSerializer, CommentSerializer, MyTokenObtainPairSerializer, \
-    ShiCollectionSerializer, CiCollectionSerializer
+    ShiCollectionSerializer, CiCollectionSerializer, WorkSerializer
 
 from main.throttles import UserReadRateThrottle, AnonReadRateThrottle
 
@@ -337,11 +338,36 @@ class ShiCollectionViewSet(viewsets.ModelViewSet):
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
 
     filterset_class = ShiCollectionFilter
-
+    # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
     ordering_fields = ['create_date']  # 排序选项
     ordering = ['-create_date']  # 默认排序
 
-    # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
+    def get_queryset(self):
+        user = self.request.user
+        qs = ShiCollection.objects.all()
+        # 不是GET查询方法 或者 管理员用户 直接返回所有
+        if self.request.method != 'GET' or user.is_superuser:
+            return qs
+
+        arg = self.request.GET
+        author = arg.get("author")
+        qsN = ShiCollection.objects.none()
+
+        if author:
+            author = int(author)
+            if author == user.id:  # 用户是作者本人
+                return qs
+            else:  # 用户不是作者本人
+                # 作者公开了收藏夹
+                if model_to_dict(Account.objects.get(id=author))['display_collections']:
+                    return qs
+
+                return qsN
+
+        return qs
+
+
+
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
@@ -371,9 +397,96 @@ class CiCollectionViewSet(viewsets.ModelViewSet):
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
 
     filterset_class = CiCollectionFilter
-
+    # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
     ordering_fields = ['create_date']  # 排序选项
     ordering = ['-create_date']  # 默认排序
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = CiCollection.objects.all()
+        # 不是GET查询方法 或者 管理员用户 直接返回所有
+        if self.request.method != 'GET' or user.is_superuser:
+            return qs
+
+        arg = self.request.GET
+        author = arg.get("author")
+        qsN = CiCollection.objects.none()
+
+        if author:
+            author = int(author)
+            if author == user.id:  # 用户是作者本人
+                return qs
+            else:  # 用户不是作者本人
+                # 作者公开了收藏夹
+                if model_to_dict(Account.objects.get(id=author))['display_collections']:
+                    return qs
+
+                return qsN
+
+        return qsN
+
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+                          exception=response.exception, content_type=response.content_type)
+    def perform_create(self, serializer):
+        serializer.save(author_id=self.request.user.id)
+
+class WorkViewSet(viewsets.ModelViewSet):
+    # queryset = Work.objects.all()
+    serializer_class = WorkSerializer
+    permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
+
+    filterset_class = WorkFilter
+
+    ordering_fields = ['topping', 'create_date']  # 排序选项
+    ordering = ['-topping', '-create_date']  # 默认排序 ?ordering=-topping,-create_date
+
+    def get_queryset(self):
+        qs = Work.objects.all()
+        user = self.request.user
+
+        # 不是GET查询方法 或者 管理员用户 直接返回所有
+        if self.request.method != 'GET' or user.is_superuser:
+            return qs
+
+        arg = self.request.GET
+        author = arg.get("author")
+        qsN = Work.objects.none()
+
+        if author: #查某人的作品
+            author = int(author)
+            if author == user.id: # 是作者本人
+                return qs
+            else: # 不是作者本人
+
+                # 如果用户公开作品列表 则可以查看作品列表里的公开作品
+                if model_to_dict(Account.objects.get(id=author))['display_works']:
+                    return qs.filter(display=True)
+
+                else: # 如果用户没公开作品列表
+                    print('没公开')
+                    return qsN
+        else:
+            print('走的None')
+            return qsN
 
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
     def create(self, request, *args, **kwargs):

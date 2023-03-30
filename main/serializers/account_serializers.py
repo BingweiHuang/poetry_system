@@ -2,7 +2,7 @@ from django.core.validators import RegexValidator, EmailValidator
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection
+from main.models.account_models import Account, Follow, Like, Post, Comment, ShiCollection, CiCollection, Work
 from django.forms import model_to_dict
 
 from django.contrib.auth import get_user_model
@@ -51,6 +51,26 @@ class AccountSerializer(serializers.ModelSerializer):
             if qs.exists():
                 res = model_to_dict(qs[0])['id']
         return res
+
+    def update(self, instance, validated_data):
+        user = instance.user
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.nickname = validated_data.get('nickname', instance.nickname)
+        instance.avatar_url = validated_data.get('avatar_url', instance.avatar_url)
+        instance.introduction = validated_data.get('introduction', instance.introduction)
+        instance.display_works = validated_data.get('display_works', instance.display_works)
+        instance.display_collections = validated_data.get('display_collections', instance.display_collections)
+        instance.save()
+
+        user.username = validated_data.get(
+            'username',
+            user.username
+        )
+
+        user.save()
+
+        return instance
 
 class FollowSerializer(serializers.ModelSerializer):
 
@@ -242,9 +262,38 @@ class CiCollectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("该诗不存在！")
 
         if CiCollection.objects.filter(author_id=user_id, ci_id=value).exists():
-            raise serializers.ValidationError("您已收藏过该诗！")
+            raise serializers.ValidationError("您已收藏过该词！")
 
         return value
+
+class WorkSerializer(serializers.ModelSerializer):
+    # author = AccountSimpleSerializer(read_only=True)
+
+    title = serializers.CharField(required=True, min_length=1, max_length=10)
+    content = serializers.CharField(required=True, min_length=10)
+    style_content = serializers.SerializerMethodField(read_only=True)
+    display = serializers.BooleanField()  # 是否公开
+    topping = serializers.BooleanField()  # 置顶
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    update_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+    class Meta:
+        model = Work
+        fields = ('__all__')
+        extra_fields = ['style_content']
+        read_only_fields = ('id', 'author', 'update_date', 'create_date', 'style_content')
+
+    def get_style_content(self, obj):
+        return obj.content.split('\n')
+
+    def validate(self, attrs):
+        if self.context["request"].method == 'POST':
+            user_id = self.context['request'].user.id
+            qs = Work.objects.filter(author_id=user_id, content=attrs['content'], title=attrs['title'])
+            if qs.exists():
+                raise serializers.ValidationError("不允许发表重复作品！")
+
+        return attrs
 
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
