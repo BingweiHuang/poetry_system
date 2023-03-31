@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.template import loader
 
-from main.utils.MyResponse import MyResponse
+from main.throttles import AnonEmailRateThrottle, UserEmailRateThrottle
 from poetry_system import settings
 
 import re
@@ -31,6 +31,13 @@ def isPasswordValid(password):
 
     # email=909140058@qq.com&code=726340&password=wei20475cy.&password2=wei20475cy.
 class UpdatePasswordView(APIView):
+    
+    def get_throttles(self):
+        throttle_classes = []
+        if self.request.method == 'GET':
+            throttle_classes = [AnonEmailRateThrottle, UserEmailRateThrottle]
+        # return throttle_classes
+        return [throttle() for throttle in throttle_classes]
 
     def get(self, request):
         arg = request.GET
@@ -39,12 +46,12 @@ class UpdatePasswordView(APIView):
 
             # # 判断邮箱格式
             # if not isEmailValid(email):
-            #     return MyResponse({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
+            #     return Response({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断邮箱是否是已经注册的状态存在
             exists = User.objects.filter(email=email).exists()
             if not exists:
-                return MyResponse({'result': '该邮箱未注册！'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': '该邮箱未注册！'}, status=status.HTTP_400_BAD_REQUEST)
 
             email_title = "修改密码验证码"
 
@@ -71,14 +78,14 @@ class UpdatePasswordView(APIView):
             send_status = msg.send()
 
             if not send_status:
-                return MyResponse({'result': f'发送邮箱失败,{send_status["errmsg"]}'},
+                return Response({'result': f'发送邮箱失败,{send_status["errmsg"]}'},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            return MyResponse({'result': "邮件发送成功~\n验证码5分钟有效。",}, status=status.HTTP_200_OK)
+            return Response({'result': "邮件发送成功~\n验证码5分钟有效。",}, status=status.HTTP_200_OK)
 
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "邮件发送失败！"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'result': "邮件发送失败！"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request):
         arg = request.POST
@@ -93,25 +100,25 @@ class UpdatePasswordView(APIView):
 
             # # 判断邮箱格式
             # if not isEmailValid(email):
-            #     return MyResponse({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
+            #     return Response({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断邮箱是否是已经注册的状态存在
             exists = User.objects.filter(email=email).exists()
             if not exists:
-                return MyResponse({'result': '该邮箱未注册！'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': '该邮箱未注册！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断验证码
             if store_code != code:
                 print(store_code, code)
-                return MyResponse({'result': "验证码错误或过期！",}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "验证码错误或过期！",}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断密码格式
             if not isPasswordValid(password):
-                return MyResponse({'result': "密码不符合规范！",}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "密码不符合规范！",}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断两次输入密码是否一样
             if password != password2:
-                return MyResponse({'result': "两次输入密码不一致！",}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "两次输入密码不一致！",}, status=status.HTTP_400_BAD_REQUEST)
 
 
             user = User.objects.get(email=email)
@@ -120,9 +127,9 @@ class UpdatePasswordView(APIView):
             user.set_password(password)
             user.save()
 
-            return MyResponse({'result': "修改密码成功，请重新登录~",}, status=status.HTTP_200_OK)
+            return Response({'result': "修改密码成功，请重新登录~",}, status=status.HTTP_200_OK)
 
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "修改密码失败"} ,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'result': "修改密码失败"} ,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

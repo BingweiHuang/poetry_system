@@ -31,7 +31,7 @@ class AccountSerializer(serializers.ModelSerializer):
     # follows = AccountSimpleSerializer(many=True, read_only=True)
 
     follow_id = serializers.SerializerMethodField()
-
+    is_superuser = serializers.SerializerMethodField()
     username = serializers.CharField(min_length=4, max_length=12, validators=[UniqueValidator(queryset=Account.objects.all(), message='该账号已经存在！')])
     nickname = serializers.CharField(min_length=1, max_length=10,)
     introduction = serializers.CharField(min_length=1, max_length=30,)
@@ -41,7 +41,7 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = ('__all__')
         # exclude = ['follows']
-        read_only_fields = ('id', 'user',  'email', 'follow_count', 'fan_count', 'post_count', 'fans', 'follows')
+        read_only_fields = ('id', 'user',  'email', 'follow_count', 'fan_count', 'post_count', 'follow_id', 'is_superuser')
 
     def get_follow_id(self, obj):
         user_id = self.context['request'].user.id
@@ -50,6 +50,14 @@ class AccountSerializer(serializers.ModelSerializer):
             qs = Follow.objects.filter(fan_id=user_id, follow_id=obj.id)
             if qs.exists():
                 res = model_to_dict(qs[0])['id']
+        return res
+
+    def get_is_superuser(self, obj):
+        res = False
+        qs = User.objects.filter(is_superuser=True, id=obj.id)
+        if qs.exists():
+            res = True
+
         return res
 
     def update(self, instance, validated_data):

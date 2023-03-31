@@ -189,27 +189,6 @@ class PostViewSet(viewsets.ModelViewSet):
     ordering = ['-create_date'] # 默认排序
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
@@ -230,35 +209,12 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = ([IsAuthenticated, IsFanOrReadOnly])
-    # permission_classes = ([permissions.IsAuthenticated])
-
 
     filterset_class = FollowFilter
-
     ordering_fields = ['create_date']  # 排序选项
     ordering = ['-create_date']  # 默认排序
-
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
+
     def perform_create(self, serializer):
         serializer.save(fan_id=self.request.user.id)
 
@@ -266,34 +222,11 @@ class LikeViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
-
-
     filterset_class = LikeFilter
-
     ordering_fields = ['create_date']  # 排序选项
     ordering = ['-create_date']  # 默认排序
-
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
+
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
@@ -301,34 +234,11 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = ([IsAuthenticated, DelCommentOrReadOnly])
-
-
     filterset_class = CommentFilter
-
     ordering_fields = ['create_date']  # 排序选项
     ordering = ['-create_date']  # 默认排序
-
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
+
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
@@ -336,7 +246,6 @@ class ShiCollectionViewSet(viewsets.ModelViewSet):
     queryset = ShiCollection.objects.all()
     serializer_class = ShiCollectionSerializer
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
-
     filterset_class = ShiCollectionFilter
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
     ordering_fields = ['create_date']  # 排序选项
@@ -366,28 +275,6 @@ class ShiCollectionViewSet(viewsets.ModelViewSet):
 
         return qs
 
-
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
@@ -395,7 +282,6 @@ class CiCollectionViewSet(viewsets.ModelViewSet):
     queryset = CiCollection.objects.all()
     serializer_class = CiCollectionSerializer
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
-
     filterset_class = CiCollectionFilter
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
     ordering_fields = ['create_date']  # 排序选项
@@ -425,27 +311,6 @@ class CiCollectionViewSet(viewsets.ModelViewSet):
 
         return qsN
 
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
@@ -453,9 +318,7 @@ class WorkViewSet(viewsets.ModelViewSet):
     # queryset = Work.objects.all()
     serializer_class = WorkSerializer
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
-
     filterset_class = WorkFilter
-
     ordering_fields = ['topping', 'create_date']  # 排序选项
     ordering = ['-topping', '-create_date']  # 默认排序 ?ordering=-topping,-create_date
 
@@ -489,26 +352,7 @@ class WorkViewSet(viewsets.ModelViewSet):
             return qsN
 
     # throttle_classes = [AnonReadRateThrottle, UserReadRateThrottle] # 针对用户限流
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
+
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 

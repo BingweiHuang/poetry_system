@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from main.utils.MyResponse import MyResponse
 from main.utils.rhyme_table.get_rhyme import pingshui2word, word2pingshui, xinyun2word, word2xinyun
 from main.utils.rhyme_table.get_rhyme import first_sentence_tone_table, get_word_rhyme
 from main.utils.algorihtm.metric_poetry_detection import metric_poetry_detection
@@ -25,10 +24,10 @@ class AllRhymeView(APIView):
                 "xinyun2word": xinyun2word,
             }
 
-            return MyResponse(datas, status=200)
+            return Response(datas, status=200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "获取韵表失败"},status=500)
+            return Response({'result': "获取韵表失败"},status=500)
 
 
 
@@ -51,7 +50,7 @@ class SearchRhymeView(APIView):
             word = arg.get('word')
 
             if not word:
-                return MyResponse({"result": "请输入一个汉字！"}, status=400)
+                return Response({"result": "请输入一个汉字！"}, status=400)
 
             word = reserved_chinese_word(word)
 
@@ -77,10 +76,10 @@ class SearchRhymeView(APIView):
                 "ps_word2rhyme": ps_word2rhyme,
                 "xin_word2rhyme": xin_word2rhyme,
             }
-            return MyResponse(datas, status=200)
+            return Response(datas, status=200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查韵失败"}, status=500)
+            return Response({'result': "查韵失败"}, status=500)
 
 
 class FirstSentenceView(APIView):
@@ -116,15 +115,14 @@ class FirstSentenceView(APIView):
                     flag = 0
                     break
 
-            return MyResponse({"is_rhyme": flag}, status=200)
+            return Response({"is_rhyme": flag}, status=200)
 
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "判断失败"}, status=500)
+            return Response({'result': "判断失败"}, status=500)
 
 class MetricPoetryView(APIView):
 
-    # /detection/metric_poetry?text=戌时皓月照空明，莺月和风度梦萦。乱绪风随千缕去，瘟君空散四春行。&yan=7&use_rhyme=1&ru=0&qi=1&jue=0
     def get(self, request):
         arg = request.GET
         try:
@@ -171,8 +169,8 @@ class MetricPoetryView(APIView):
             # else:
             #     print('不押韵')
 
-            return MyResponse(datas, status=200)
+            return Response(datas, status=200)
 
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "格律诗检测失败"}, status=500)
+            return Response({'result': "格律诗检测失败"}, status=500)

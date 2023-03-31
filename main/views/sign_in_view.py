@@ -11,7 +11,7 @@ from django.core.mail import EmailMessage
 from django.template import loader
 
 from main.models.account_models import Account
-from main.utils.MyResponse import MyResponse
+from main.throttles import AnonEmailRateThrottle, UserEmailRateThrottle
 from poetry_system import settings
 
 import re
@@ -31,9 +31,15 @@ def isPasswordValid(password):
 
 
 
-
 class SignInView(APIView):
 
+    def get_throttles(self):
+        throttle_classes = []
+        if self.request.method == 'GET':
+            throttle_classes = [AnonEmailRateThrottle, UserEmailRateThrottle]
+        # return throttle_classes
+        return [throttle() for throttle in throttle_classes]
+    
     def get(self, request):
         arg = request.GET
         try:
@@ -41,12 +47,12 @@ class SignInView(APIView):
 
             # # 判断邮箱格式
             # if not isEmailValid(email):
-            #     return MyResponse({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
+            #     return Response({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断邮箱是否是已经注册的状态存在
             exists = User.objects.filter(email=email).exists()
             if exists:
-                return MyResponse({'result': '邮箱已被注册！'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': '邮箱已被注册！'}, status=status.HTTP_400_BAD_REQUEST)
 
             email_title = "注册验证码"
 
@@ -73,14 +79,14 @@ class SignInView(APIView):
             # 发送邮箱
             send_status = msg.send()
             if not send_status:
-                return MyResponse({'result': f'发送邮箱失败,{send_status["errmsg"]}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({'result': f'发送邮箱失败,{send_status["errmsg"]}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            return MyResponse({
+            return Response({
                 'result': "邮件发送成功~\n验证码5分钟有效。",
             }, status=status.HTTP_200_OK)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "邮件发送失败"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'result': "邮件发送失败"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request):
         arg = request.POST
@@ -94,24 +100,24 @@ class SignInView(APIView):
 
             # # 判断邮箱格式
             # if not isEmailValid(email):
-            #     return MyResponse({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
+            #     return Response({'result': '邮箱格式有误！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断邮箱是否是已经注册的状态存在
             exists = User.objects.filter(email=email).exists()
             if exists:
-                return MyResponse({'result': '邮箱已被注册！'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': '邮箱已被注册！'}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断验证码
             if store_code != code:
-                return MyResponse({'result': "验证码错误或过期！", }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "验证码错误或过期！", }, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断密码格式
             if not isPasswordValid(password):
-                return MyResponse({'result': "密码不符合规范！", }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "密码不符合规范！", }, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断两次输入密码是否一样
             if password != password2:
-                return MyResponse({'result': "两次输入密码不一致！", }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'result': "两次输入密码不一致！", }, status=status.HTTP_400_BAD_REQUEST)
 
             cache.delete(key) # 删除缓存
 
@@ -128,8 +134,8 @@ class SignInView(APIView):
                                    avatar_url='http://rs2ezu96y.hn-bkt.clouddn.com/system/default_avatar.png',
                                    introduction='这个人很懒，没有留下简介...')
 
-            return MyResponse({'result': "注册成功，请登录~",}, status=status.HTTP_200_OK)
+            return Response({'result': "注册成功，请登录~",}, status=status.HTTP_200_OK)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "注册失败"} ,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'result': "注册失败"} ,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

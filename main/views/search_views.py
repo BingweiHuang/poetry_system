@@ -6,7 +6,6 @@ from main.filters.search_filters import CiFilter, ShiFilter, FlyFilter, ShijingF
 from main.models.poetry_models import Ci, Shi, Fly, WordFrequency, Shijing
 
 from main.serializers.search_serializers import CiSerializer, ShiSerializer, FlySerializer, ShijingSerializer
-from main.utils.MyResponse import MyResponse
 
 
 class CiViewSet(viewsets.ModelViewSet):
@@ -30,27 +29,6 @@ class CiViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-
 class ShiViewSet(viewsets.ModelViewSet):
     queryset = Shi.objects.all()
     serializer_class = ShiSerializer
@@ -72,26 +50,6 @@ class ShiViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
 
 class FlyViewSet(viewsets.ModelViewSet):
     queryset = Fly.objects.all()
@@ -123,27 +81,6 @@ class FlyViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-
 
 class ShijingViewSet(viewsets.ModelViewSet):
     queryset = Shijing.objects.all()
@@ -165,24 +102,3 @@ class ShijingViewSet(viewsets.ModelViewSet):
                     qs = qs.filter(content__contains=keyword)
 
         return qs
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
-                          exception=response.exception, content_type=response.content_type)
