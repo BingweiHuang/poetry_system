@@ -18,7 +18,6 @@ class AllRhymeView(APIView):
     def get(self, request):
         arg = request.GET
         try:
-
             datas = {
                 "pingshui2word": pingshui2word,
                 "xinyun2word": xinyun2word,
@@ -29,6 +28,30 @@ class AllRhymeView(APIView):
             traceback.print_exc()
             return Response({'result': "获取韵表失败"},status=500)
 
+class GetRhymeView(APIView):
+    # permission_classes = ([IsAuthenticated])
+
+    def get(self, request):
+        arg = request.GET
+        try:
+            kind = int(arg.get('kind', 1))
+            sheng_tag = arg.get('sheng_tag', '平声')
+            yun_tag = arg.get('yun_tag', '')
+
+            list = {}
+            if kind == 1:
+                list = {
+                    'list': pingshui2word[sheng_tag][yun_tag]
+                }
+            elif kind == 2:
+                list = {
+                    'list': xinyun2word[sheng_tag][yun_tag]
+                }
+
+            return Response(list, status=200)
+        except Exception as e:
+            traceback.print_exc()
+            return Response({'result': "获取韵表失败"},status=500)
 
 
 

@@ -192,6 +192,23 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
+    def get_queryset(self):
+        qs = Post.objects.all()
+        if self.request.method == 'GET':
+            mode = self.request.GET.get('mode')
+            if mode:
+                mode = int(mode)
+                if mode == 1: # 只看关注的人的帖子
+                    qs2 = Follow.objects.filter(fan_id=self.request.user.id)
+                    author_list = []
+                    for follow in qs2:
+                        author_list.append(int(model_to_dict(follow)['follow']))
+
+                    print('author_list:', author_list)
+                    qs = qs.filter(author_id__in=author_list)
+
+        return qs
+
 # class AccountRViewSet(viewsets.ReadOnlyModelViewSet):
 # ReadOnlyModelViewSet仅提供list和detail可读动作
 class AccountViewSet(viewsets.ModelViewSet):
