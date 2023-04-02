@@ -28,8 +28,10 @@ class CiSerializer(serializers.ModelSerializer):
                 res = model_to_dict(qs[0])['id']
         return res
 
+yan_list = ['杂', '四', '五', '六', '七', '八', '九', '十', '十一']
 class ShiSerializer(serializers.ModelSerializer):
 
+    yan = serializers.SerializerMethodField()
     content = serializers.SerializerMethodField()
     collection_id = serializers.SerializerMethodField()
 
@@ -39,6 +41,11 @@ class ShiSerializer(serializers.ModelSerializer):
 
     def get_content(self, obj):
         return obj.content.split('\n')[:-1]
+
+    def get_yan(self, obj):
+        num = obj.yan - 3
+        num = 0 if num < 0 or num > 8 else num
+        return yan_list[num] + '言'
 
     def get_collection_id(self, obj):
         user_id = self.context['request'].user.id
