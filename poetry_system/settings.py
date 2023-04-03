@@ -197,6 +197,15 @@ REST_FRAMEWORK = {
 
 }
 
+# DRF扩展
+REST_FRAMEWORK_EXTENSIONS = {
+    # 默认缓存时间
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60 * 3,
+    # 缓存存储
+    'DEFAULT_USE_CACHE': 'default',
+}
+
+
 AUTHENTICATION_BACKENDS = (
     'main.MyCustomBackend.MyCustomBackend',
 )

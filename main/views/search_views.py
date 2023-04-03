@@ -3,8 +3,13 @@ import datetime
 from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie, vary_on_headers
+from rest_framework_extensions.cache.decorators import cache_response
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+
 
 from main.filters.search_filters import CiFilter, ShiFilter, FlyFilter, ShijingFilter
 from main.models.poetry_models import Ci, Shi, Fly, WordFrequency, Shijing
@@ -54,7 +59,13 @@ class ShiViewSet(viewsets.ModelViewSet):
 
         return qs
 
-
+'''
+纯后端缓存，与@cache_response(timeout=60*60, cache='default')效果相同
+CacheResponseMixin # 单个和列表查询
+ListCacheResponseMixin # 列表查询
+RetrieveCacheResponseMixin # 单个查询
+'''
+# class FlyViewSet(CacheResponseMixin, viewsets.ModelViewSet):
 class FlyViewSet(viewsets.ModelViewSet):
     queryset = Fly.objects.all()
     serializer_class = FlySerializer
@@ -68,24 +79,30 @@ class FlyViewSet(viewsets.ModelViewSet):
     #     response = super().create(request, *args, **kwargs)
     #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
     #                       exception=response.exception, content_type=response.content_type)
-
-    @method_decorator(cache_page(60 * 60 * 2)) # 两小时缓存
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        # response["Expires"] = datetime.datetime.now()
-        return response
-
+    # def retrieve(self, request, *args, **kwargs):
+    #     response = super().retrieve(request, *args, **kwargs)
+    #     # response["Expires"] = datetime.datetime.now()
+    #     return response
     # def update(self, request, *args, **kwargs):
     #     response = super().update(request, *args, **kwargs)
     #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
     #                       exception=response.exception, content_type=response.content_type)
-    #
     # def destroy(self, request, *args, **kwargs):
     #     response = super().destroy(request, *args, **kwargs)
     #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
     #                       exception=response.exception, content_type=response.content_type)
 
-    @method_decorator(cache_page(60 * 60 * 2)) # 两小时缓存
+    '''
+    纯后端缓存
+    '''
+    # @cache_response(timeout=60*60, cache='default')
+
+    '''
+    前后端都会缓存
+    '''
+    @method_decorator(cache_page(60 * 60 * 24 * 14)) # 14天
+    # @method_decorator(vary_on_cookie) # 不同cookie会有不同缓存
+    # @method_decorator(vary_on_headers("Authorization", )) # 不同Authorization（用户）会有不同缓存
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         # response["Expires"] = datetime.datetime.now()
