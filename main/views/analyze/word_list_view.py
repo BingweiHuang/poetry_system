@@ -1,13 +1,12 @@
 import traceback
 
 from django.forms import model_to_dict
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from main.models.poetry_models import Shi, Shijing
 from main.models.poetry_models import Ci
 from main.permissions import IsAuthorOrReadOnly
-from main.utils.MyResponse import MyResponse
+from main.utils.ExpiresResponse import Response
 
 
 class WordListView(APIView):
@@ -34,7 +33,7 @@ class WordListView(APIView):
                         word_dict[keyword] = 0
 
             if len(word_dict) > 10:
-                return MyResponse({"result": "词数必须在[1,10]！"}, 400)
+                return Response({"result": "词数必须在[1,10]！"}, 400)
 
             kwargs = {}
 
@@ -77,10 +76,10 @@ class WordListView(APIView):
                 "word_list": sorted(res_list, key = lambda x:x['value'], reverse=True),
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)
 
     def post(self, request):
         arg = request.POST
@@ -98,7 +97,7 @@ class WordListView(APIView):
                         word_dict[keyword] = 0
 
             if len(word_dict) > 10:
-                return MyResponse({"result": "词数必须在[1,10]！"}, 400)
+                return Response({"result": "词数必须在[1,10]！"}, 400)
 
             kwargs = {}
 
@@ -142,7 +141,7 @@ class WordListView(APIView):
                 "word_list": sorted(res_list, key = lambda x:x['value'], reverse=True),
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)

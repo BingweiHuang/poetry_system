@@ -8,7 +8,6 @@ from collections import Counter
 
 from main.models.poetry_models import Ci
 from main.permissions import IsAuthorOrReadOnly
-from main.utils.MyResponse import MyResponse
 
 
 class RhythmicStatisticsView(APIView):
@@ -48,10 +47,10 @@ class RhythmicStatisticsView(APIView):
                 "word_list": count_pairs,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'msg': "查询失败"} ,status=500)
+            return Response({'msg': "查询失败"} ,status=500)
 
     def post(self, request):
         arg = request.POST
@@ -80,7 +79,7 @@ class RhythmicStatisticsView(APIView):
                 "word_list": count_pairs,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)

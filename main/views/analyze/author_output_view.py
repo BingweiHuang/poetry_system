@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 from main.models.poetry_models import Shi
 from main.models.poetry_models import Ci
 from main.permissions import IsAuthorOrReadOnly
-from main.utils.MyResponse import MyResponse
 
 
 class AuthorOutputView(APIView):
@@ -26,7 +25,7 @@ class AuthorOutputView(APIView):
             three_hundred = arg.get("three_hundred")
 
             if num > 20 or num < 5:
-                return MyResponse({"result": "人数必须在[5,20]！"}, status=400)
+                return Response({"result": "人数必须在[5,20]！"}, status=400)
 
             kwargs = {}
 
@@ -481,10 +480,10 @@ class AuthorOutputView(APIView):
                 # "word_dict": word_dict.sort(key=lambda x: x[1]),
                 "res_list": res_list,
             }
-            return MyResponse(datas, status=200)
+            return Response(datas, status=200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)
 
 
     def post(self, request):
@@ -498,7 +497,7 @@ class AuthorOutputView(APIView):
             three_hundred = arg.get("three_hundred")
 
             if num > 20 or num < 5:
-                return MyResponse({"result": "人数必须在[5,20]！"}, status=400)
+                return Response({"result": "人数必须在[5,20]！"}, status=400)
 
             kwargs = {}
 
@@ -953,7 +952,7 @@ class AuthorOutputView(APIView):
                 # "word_dict": word_dict.sort(key=lambda x: x[1]),
                 "res_list": res_list,
             }
-            return MyResponse(datas, status=200)
+            return Response(datas, status=200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)

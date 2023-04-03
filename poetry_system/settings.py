@@ -30,11 +30,12 @@ from corsheaders.defaults import default_headers
 ALLOWED_HOSTS = ['*'] # 允许所有ip访问
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True #所有域名都可以跨域访问
-# CORS_ALLOW_HEADERS = ('*') #允许所有的请求头
-CORS_ALLOW_HEADERS = default_headers + (
-    'Loading',
-    'Authorization',
-)
+CORS_ALLOW_HEADERS = ('*') #允许所有的请求头
+# CORS_ALLOW_HEADERS = default_headers + (
+#     'Loading',
+#     'Authorization',
+#     'Cache-Control',
+# )
 
 
 # Application definition

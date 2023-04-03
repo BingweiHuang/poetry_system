@@ -15,7 +15,6 @@ from django.core.cache import cache
 
 from django.contrib.auth import get_user_model
 
-from main.utils.MyResponse import MyResponse
 
 User = get_user_model()
 
@@ -397,7 +396,7 @@ class GetQiniuTokenView(APIView):
     permission_classes = ([IsAuthenticated])
     def get(self, request):
         token = qn_token()
-        return MyResponse({'qn_token': token}, status=200)
+        return Response({'qn_token': token}, status=200)
 
 
 from rest_framework_simplejwt.views import TokenObtainPairView

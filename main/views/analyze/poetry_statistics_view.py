@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 
 from main.models.poetry_models import Shi
 from main.permissions import IsAuthorOrReadOnly
-from main.utils.MyResponse import MyResponse
 
 
 class PoetryStatisticsView(APIView):
@@ -27,7 +26,7 @@ class PoetryStatisticsView(APIView):
             rhyme_num = int(arg.get("rhyme_num", 10))
 
             if rhyme_num > 20 or rhyme_num < 5:
-                return MyResponse({"result": "韵脚数必须在[5,15]！"}, status=400)
+                return Response({"result": "韵脚数必须在[5,15]！"}, status=400)
 
             kwargs = {}
 
@@ -68,10 +67,10 @@ class PoetryStatisticsView(APIView):
                 "res_list": res_list,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'msg': "查询失败"} ,status=500)
+            return Response({'msg': "查询失败"} ,status=500)
 
     def post(self, request):
         arg = request.POST
@@ -81,7 +80,7 @@ class PoetryStatisticsView(APIView):
             rhyme_num = int(arg.get("rhyme_num", 10))
 
             if rhyme_num > 20 or rhyme_num < 5:
-                return MyResponse({"result": "韵脚数必须在[5,15]！"}, 400)
+                return Response({"result": "韵脚数必须在[5,15]！"}, 400)
 
             kwargs = {}
 
@@ -122,7 +121,7 @@ class PoetryStatisticsView(APIView):
                 "res_list": res_list,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)

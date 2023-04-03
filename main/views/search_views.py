@@ -1,4 +1,8 @@
+import datetime
+
 from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -59,6 +63,33 @@ class FlyViewSet(viewsets.ModelViewSet):
     ordering = ['id']  # 默认排序
 
     permission_classes = ([IsAuthenticated])
+
+    # def create(self, request, *args, **kwargs):
+    #     response = super().create(request, *args, **kwargs)
+    #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+    #                       exception=response.exception, content_type=response.content_type)
+
+    @method_decorator(cache_page(60 * 60 * 2)) # 两小时缓存
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        # response["Expires"] = datetime.datetime.now()
+        return response
+
+    # def update(self, request, *args, **kwargs):
+    #     response = super().update(request, *args, **kwargs)
+    #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+    #                       exception=response.exception, content_type=response.content_type)
+    #
+    # def destroy(self, request, *args, **kwargs):
+    #     response = super().destroy(request, *args, **kwargs)
+    #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
+    #                       exception=response.exception, content_type=response.content_type)
+
+    @method_decorator(cache_page(60 * 60 * 2)) # 两小时缓存
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        # response["Expires"] = datetime.datetime.now()
+        return response
 
     def get_queryset(self):
         arg = self.request.GET

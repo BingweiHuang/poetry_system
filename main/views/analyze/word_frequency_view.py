@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 
 from main.models.poetry_models import WordFrequency
 from main.permissions import IsAuthorOrReadOnly
-from main.utils.MyResponse import MyResponse
 
 avi_l = [
     ['n', 's', 'nr', 'ns', 'nt', 'nl', 'ng', 'nz', 'm'], # 单字 多字
@@ -53,10 +52,10 @@ class WordFrequencyView(APIView):
                 "word_list": word_list,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)
 
     def post(self, request):
         arg = request.POST
@@ -88,7 +87,7 @@ class WordFrequencyView(APIView):
                 "word_list": word_list,
             }
 
-            return MyResponse(datas, 200)
+            return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()
-            return MyResponse({'result': "查询失败"} ,status=500)
+            return Response({'result': "查询失败"} ,status=500)
