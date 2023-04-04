@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 from rest_framework_extensions.cache.decorators import cache_response
-from rest_framework_extensions.cache.mixins import CacheResponseMixin
+from rest_framework_extensions.cache.mixins import CacheResponseMixin, ListCacheResponseMixin
 
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -65,8 +65,8 @@ CacheResponseMixin # 单个和列表查询
 ListCacheResponseMixin # 列表查询
 RetrieveCacheResponseMixin # 单个查询
 '''
-# class FlyViewSet(CacheResponseMixin, viewsets.ModelViewSet):
-class FlyViewSet(viewsets.ModelViewSet):
+class FlyViewSet(ListCacheResponseMixin, viewsets.ModelViewSet):
+# class FlyViewSet(viewsets.ModelViewSet):
     queryset = Fly.objects.all()
     serializer_class = FlySerializer
     filterset_class = FlyFilter
@@ -92,21 +92,24 @@ class FlyViewSet(viewsets.ModelViewSet):
     #     return MyResponse(data=response.data, status=response.status_code, template_name=response.template_name,
     #                       exception=response.exception, content_type=response.content_type)
 
-    '''
-    纯后端缓存
-    '''
-    # @cache_response(timeout=60*60, cache='default')
+
 
     '''
-    前后端都会缓存
-    '''
-    @method_decorator(cache_page(60 * 60 * 24 * 14)) # 14天
+    前后端都会缓存 还会让nginx也缓存 不可取
+    # @method_decorator(cache_page(60 * 60 * 24 * 14)) # 14天
     # @method_decorator(vary_on_cookie) # 不同cookie会有不同缓存
     # @method_decorator(vary_on_headers("Authorization", )) # 不同Authorization（用户）会有不同缓存
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        # response["Expires"] = datetime.datetime.now()
-        return response
+    '''
+
+
+    '''
+    纯后端缓存 但不识别参数区别 不可取
+    @cache_response(timeout=60*60*24*14, cache='default')
+    '''
+    # def list(self, request, *args, **kwargs):
+    #     response = super().list(request, *args, **kwargs)
+    #     return response
+
 
     def get_queryset(self):
         arg = self.request.GET

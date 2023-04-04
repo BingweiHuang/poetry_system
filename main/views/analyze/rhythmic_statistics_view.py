@@ -1,11 +1,14 @@
 import traceback
 
 from django.forms import model_to_dict
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from collections import Counter
+
 
 from main.models.poetry_models import Ci
 
@@ -20,6 +23,8 @@ class RhythmicStatisticsView(APIView):
     # /analyze/rhythmic_statistics?dynasty=近现代&num=10
     # /analyze/rhythmic_statistics?dynasty=宋代&num=10
     # /analyze/rhythmic_statistics?dynasty=五代&num=10
+
+    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
     def get(self, request):
         arg = request.GET
         try:

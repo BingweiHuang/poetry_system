@@ -1,6 +1,8 @@
 import traceback
 
 from django.db.models import Count, Q
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,6 +16,7 @@ class AuthorOutputView(APIView):
 
     # /analyze/author_output?dynasty=唐代&num=10&shici=shi
 
+    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
     def get(self, request):
         arg = request.GET
         try:

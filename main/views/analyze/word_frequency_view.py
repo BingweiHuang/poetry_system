@@ -2,6 +2,8 @@ import traceback
 
 from django.forms import model_to_dict
 from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -22,6 +24,8 @@ class WordFrequencyView(APIView):
     # /analyze/word_frequency?num=5&dynasty=5&word_len=2&phrase=a ag ad al an
 
     # 0：毛泽东诗词 1：纳兰性德词 2：宋词 3：五代词 4：宋诗 5：唐诗 6：王国维词 7：诗经
+
+    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
     def get(self, request):
         arg = request.GET
         try:
