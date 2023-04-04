@@ -4,7 +4,7 @@ from rest_framework import permissions
 class IsAuthorOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
 
-        # 读取权限被允许用于任何请求，
+        # 读取权限被允许用于任何请求
         # 所以我们始终允许 GET，HEAD 或 OPTIONS 请求。 或者是管理员
         if request.method in permissions.SAFE_METHODS or request.user.is_superuser:
             return True

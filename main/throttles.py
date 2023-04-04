@@ -13,7 +13,7 @@ class UserReadRateThrottle(UserRateThrottle):
     THROTTLE_RATES = {"user": "30/min"}
 
 class AnonEmailRateThrottle(AnonRateThrottle):
-    THROTTLE_RATES = {"anon": "1/min"}
+    scope = 'anon_email'
 
 class UserEmailRateThrottle(UserRateThrottle):
-    THROTTLE_RATES = {"user": "1/min"}
+    scope = 'user_email'

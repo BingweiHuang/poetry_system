@@ -1,16 +1,16 @@
 import traceback
 
 from django.forms import model_to_dict
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from main.models.poetry_models import Shi, Shijing
 from main.models.poetry_models import Ci
-from main.permissions import IsAuthorOrReadOnly
-from main.utils.ExpiresResponse import Response
+from rest_framework.response import Response
 
 
 class WordListView(APIView):
-    permission_classes = ([IsAuthorOrReadOnly])
+    permission_classes = ([IsAuthenticated])
 
     # /analyze/word_list?author=毛泽东&dynasty=近现代&word_list=春 夏 秋 冬
     # /analyze/word_list?author=毛泽东&dynasty=近现代&word_list=红旗 人民
@@ -75,6 +75,11 @@ class WordListView(APIView):
                 # "word_dict": word_dict.sort(key=lambda x: x[1]),
                 "word_list": sorted(res_list, key = lambda x:x['value'], reverse=True),
             }
+
+            '''
+            print(datas['word_list'])
+            '''
+
 
             return Response(datas, 200)
         except Exception as e:

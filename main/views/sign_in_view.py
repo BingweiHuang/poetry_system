@@ -57,7 +57,7 @@ class SignInView(APIView):
             email_title = "注册验证码"
 
             code = str(random.randrange(100000, 999999))
-            cache.set(email + '_sign_in', code)  # 存session
+            cache.set(email + '_sign_in', code, 60 * 5)  # 存session
 
             # 这个context这里定义的字段，是要给html模板中的验证码使用的，HTML中{% code %}引用即可
             context = {'code': code}
