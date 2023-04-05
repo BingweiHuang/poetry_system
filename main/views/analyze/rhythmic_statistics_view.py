@@ -24,7 +24,7 @@ class RhythmicStatisticsView(APIView):
     # /analyze/rhythmic_statistics?dynasty=宋代&num=10
     # /analyze/rhythmic_statistics?dynasty=五代&num=10
 
-    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
+    @method_decorator(cache_page(60 * 60 * 24 * 4))  # 14天
     def get(self, request):
         arg = request.GET
         try:

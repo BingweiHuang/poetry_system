@@ -16,7 +16,7 @@ class AuthorOutputView(APIView):
 
     # /analyze/author_output?dynasty=唐代&num=10&shici=shi
 
-    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
+    @method_decorator(cache_page(60 * 60 * 24 * 2))  # 2天
     def get(self, request):
         arg = request.GET
         try:

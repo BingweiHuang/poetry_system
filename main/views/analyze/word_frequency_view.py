@@ -25,7 +25,7 @@ class WordFrequencyView(APIView):
 
     # 0：毛泽东诗词 1：纳兰性德词 2：宋词 3：五代词 4：宋诗 5：唐诗 6：王国维词 7：诗经
 
-    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
+    @method_decorator(cache_page(60 * 60 * 24 * 5))  # 14天
     def get(self, request):
         arg = request.GET
         try:

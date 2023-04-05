@@ -19,7 +19,7 @@ class WordListView(APIView):
     # /analyze/word_list?author=苏轼&dynasty=宋代&shici=shi&word_list=春 夏 秋 冬
     # /analyze/word_list?dynasty=宋代&shici=shi&word_list=春秋 江山 落花 乾坤
 
-    @method_decorator(cache_page(60 * 60 * 24 * 14))  # 14天
+    @method_decorator(cache_page(60 * 60 * 24 * 2))  # 14天
     def get(self, request):
         arg = request.GET
         try:
