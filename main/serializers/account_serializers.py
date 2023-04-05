@@ -251,6 +251,14 @@ class ShiCollectionSerializer(serializers.ModelSerializer):
 
         return value
 
+# class ShiCollectionIdListSerializer(serializers.ModelSerializer):
+#     create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+#
+#     class Meta:
+#         model = ShiCollection
+#         fields = ('__all__')
+#         read_only_fields = ('id', 'author', 'shi', 'create_date')
+
 class CiCollectionSerializer(serializers.ModelSerializer):
     # author = AccountSimpleSerializer(read_only=True)
     ci = CiSerializer(read_only=True)
@@ -273,6 +281,14 @@ class CiCollectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("您已收藏过该词！")
 
         return value
+
+# class CiCollectionIdListSerializer(serializers.ModelSerializer):
+#     create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+#
+#     class Meta:
+#         model = CiCollection
+#         fields = ('__all__')
+#         read_only_fields = ('id', 'author', 'ci', 'create_date')
 
 class WorkSerializer(serializers.ModelSerializer):
     # author = AccountSimpleSerializer(read_only=True)

@@ -70,7 +70,7 @@ class PoetryRhymeStatisticsView(APIView):
         try:
             author = arg.get("author")
             dynasty = arg.get("dynasty")
-            rhyme_num = int(arg.get("rhyme_num", 10))
+            rhyme_num = int(arg.get("rhyme_num", 8))
 
             print(rhyme_num)
 

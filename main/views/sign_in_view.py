@@ -29,8 +29,6 @@ def isPasswordValid(password):
         password
     )
 
-
-
 class SignInView(APIView):
 
     def get_throttles(self):

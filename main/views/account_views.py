@@ -24,8 +24,6 @@ from main.serializers.account_serializers import AccountSimpleSerializer, Accoun
     FollowSerializer, PostSerializer, LikeSerializer, CommentSerializer, MyTokenObtainPairSerializer, \
     ShiCollectionSerializer, CiCollectionSerializer, WorkSerializer
 
-from main.throttles import UserReadRateThrottle, AnonReadRateThrottle
-
 from rest_framework.views import APIView
 
 '''
@@ -168,15 +166,6 @@ from poetry_system import settings
 # blog/views.py
 from rest_framework import viewsets
 
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     def get_serializer_class(self):
-#         if self.action == 'create':
-#             return UserSignSerializer
-#         elif self.action == 'update':
-#             return UserUpdateSerializer
-#         return UserSignSerializer
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -217,7 +206,6 @@ class AccountViewSet(viewsets.ModelViewSet):
     filterset_class = AccountFilter
     ordering_fields = ['id', 'fan_count']  # 排序选项
     ordering = ['id']  # 默认排序
-
 
     
 

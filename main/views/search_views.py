@@ -60,7 +60,7 @@ class ShiViewSet(viewsets.ModelViewSet):
         return qs
 
 '''
-纯后端缓存，与@cache_response(timeout=60*60, cache='default')效果相同
+纯后端缓存
 CacheResponseMixin # 单个和列表查询
 ListCacheResponseMixin # 列表查询
 RetrieveCacheResponseMixin # 单个查询
