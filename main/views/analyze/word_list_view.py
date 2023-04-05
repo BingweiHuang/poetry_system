@@ -10,9 +10,14 @@ from main.models.poetry_models import Shi, Shijing
 from main.models.poetry_models import Ci
 from rest_framework.response import Response
 
+from main.permissions import StaffOnly
+
 
 class WordListView(APIView):
-    permission_classes = ([IsAuthenticated])
+    permission_classes = ([IsAuthenticated, StaffOnly])
+
+    # def get_permissions(self):
+
 
     # /analyze/word_list?author=毛泽东&dynasty=近现代&word_list=春 夏 秋 冬
     # /analyze/word_list?author=毛泽东&dynasty=近现代&word_list=红旗 人民
@@ -35,8 +40,8 @@ class WordListView(APIView):
                     if keyword != '':
                         word_dict[keyword] = 0
 
-            if len(word_dict) > 10:
-                return Response({"result": "词数必须在[1,10]！"}, 400)
+            if len(word_dict) > 6:
+                return Response({"result": "词数必须在[1,6]！"}, 400)
 
             kwargs = {}
 

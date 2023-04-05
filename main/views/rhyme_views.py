@@ -10,23 +10,23 @@ from main.utils.rhyme_table.get_rhyme import pingshui2word, word2pingshui, xinyu
 from main.utils.rhyme_table.get_rhyme import first_sentence_tone_table, get_word_rhyme
 from main.utils.algorihtm.metric_poetry_detection import metric_poetry_detection
 
-class AllRhymeView(APIView):
-    # permission_classes = ([IsAuthenticated])
-
-    # /rhyme/all_rhyme
-
-    def get(self, request):
-        arg = request.GET
-        try:
-            datas = {
-                "pingshui2word": pingshui2word,
-                "xinyun2word": xinyun2word,
-            }
-
-            return Response(datas, status=200)
-        except Exception as e:
-            traceback.print_exc()
-            return Response({'result': "获取韵表失败"},status=500)
+# class AllRhymeView(APIView):
+#     # permission_classes = ([IsAuthenticated])
+#
+#     # /rhyme/all_rhyme
+#
+#     def get(self, request):
+#         arg = request.GET
+#         try:
+#             datas = {
+#                 "pingshui2word": pingshui2word,
+#                 "xinyun2word": xinyun2word,
+#             }
+#
+#             return Response(datas, status=200)
+#         except Exception as e:
+#             traceback.print_exc()
+#             return Response({'result': "获取韵表失败"},status=500)
 
 class GetRhymeView(APIView):
     # permission_classes = ([IsAuthenticated])
@@ -103,7 +103,6 @@ class SearchRhymeView(APIView):
         except Exception as e:
             traceback.print_exc()
             return Response({'result': "查韵失败"}, status=500)
-
 
 class FirstSentenceView(APIView):
     # /detection/first_sentence?text=戌时皓月照空明&yan=7&use_rhyme=1&ru=0&qi=1

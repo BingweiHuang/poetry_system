@@ -127,7 +127,7 @@ class UpdatePasswordView(APIView):
             user.set_password(password)
             user.save()
 
-            return Response({'result': "修改密码成功，请重新登录~",}, status=status.HTTP_200_OK)
+            return Response({'result': "修改密码成功，请重新登录~",}, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             traceback.print_exc()
