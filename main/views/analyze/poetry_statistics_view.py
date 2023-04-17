@@ -47,10 +47,10 @@ class PoetryStyleStatisticsView(APIView):
             res_list.append(the_list)
 
             '''
+            
+            '''
             print(res_list[0])
             print(res_list[1])
-            '''
-
 
             datas = {
                 "res_list": res_list,
@@ -84,15 +84,16 @@ class PoetryRhymeStatisticsView(APIView):
             if dynasty and dynasty != '不限朝代':
                 kwargs["dynasty"] = dynasty
 
-            qs = Shi.objects.filter(**kwargs) # 按条件筛
+            qs = Shi.objects.exclude(rhyme__isnull=True).filter(**kwargs) # 按条件筛
             # 统计诗的韵脚
-            qs2 = qs.values('rhyme').filter(~Q(rhyme='')).annotate(num=Count('id')).order_by('-num', 'rhyme')
+            qs2 = qs.values('rhyme').annotate(num=Count('id')).order_by('-num', 'rhyme')
             count_pairs = [{'name': poem['rhyme'], 'value': poem['num']} for poem in qs2]
             count_pairs = count_pairs[:rhyme_num]
 
             '''
-            print(count_pairs)
+            
             '''
+            print(count_pairs)
 
             datas = {
                 "count_pairs": count_pairs,
