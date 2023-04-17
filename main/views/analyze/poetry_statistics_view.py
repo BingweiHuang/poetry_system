@@ -47,10 +47,10 @@ class PoetryStyleStatisticsView(APIView):
             res_list.append(the_list)
 
             '''
-            
-            '''
             print(res_list[0])
             print(res_list[1])
+            '''
+
 
             datas = {
                 "res_list": res_list,
@@ -91,9 +91,9 @@ class PoetryRhymeStatisticsView(APIView):
             count_pairs = count_pairs[:rhyme_num]
 
             '''
-            
-            '''
             print(count_pairs)
+            '''
+
 
             datas = {
                 "count_pairs": count_pairs,

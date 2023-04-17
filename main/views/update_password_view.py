@@ -109,7 +109,7 @@ class UpdatePasswordView(APIView):
 
             # 判断验证码
             if store_code != code:
-                print(store_code, code)
+                # print(store_code, code)
                 return Response({'result': "验证码错误或过期！",}, status=status.HTTP_400_BAD_REQUEST)
 
             # 判断密码格式
