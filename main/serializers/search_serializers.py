@@ -40,7 +40,7 @@ class ShiSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_content(self, obj):
-        return obj.content.split('\n')[:-1]
+        return obj.content.split('\n')
 
     def get_yan(self, obj):
         num = obj.yan - 3
