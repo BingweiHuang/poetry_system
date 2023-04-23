@@ -323,8 +323,8 @@ class WorkViewSet(viewsets.ModelViewSet):
     serializer_class = WorkSerializer
     permission_classes = ([IsAuthenticated, IsAuthorOrReadOnly])
     filterset_class = WorkFilter
-    ordering_fields = ['topping', 'create_date']  # 排序选项
-    ordering = ['-topping', '-create_date']  # 默认排序 ?ordering=-topping,-create_date
+    ordering_fields = ['topping', 'update_date']  # 排序选项
+    ordering = ['-topping', '-update_date']  # 默认排序 ?ordering=-topping,-update_date
 
     def get_queryset(self):
         qs = Work.objects.all()
