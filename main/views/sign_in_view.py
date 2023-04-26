@@ -129,7 +129,7 @@ class SignInView(APIView):
 
 
             Account.objects.create(id=user.id,user=user,email=email,username=username, nickname='无名',
-                                   avatar_url='http://rs2ezu96y.hn-bkt.clouddn.com/system/default_avatar.png',
+                                   avatar_url='http://cdn.bwhlifetimelove.top/system/default_avatar.png',
                                    introduction='这个人很懒，没有留下简介...')
 
             return Response({'result': "注册成功，请登录~",}, status=status.HTTP_200_OK)
